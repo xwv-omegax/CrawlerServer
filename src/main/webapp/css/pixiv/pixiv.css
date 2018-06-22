@@ -1,0 +1,115 @@
+html {
+    font-family: "Helvetica Neue", arial, "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+}
+
+.tag_ban {
+
+    font-size: 12px;
+    color: #ff3300;
+    margin-left: 6px;
+    margin-right: 3px;
+    display: none;
+
+}
+
+._tag_ban {
+
+
+    font-size: 12px;
+    color: #ff3300;
+    margin-left: 6px;
+    margin-right: 3px;
+
+}
+
+.tag_noban, .author_noban {
+
+    /*font-size: 12px;*/
+    /*color: #ff3300;*/
+    margin-left: 6px;
+    margin-right: 3px;
+    display: none;
+
+}
+
+.tag_noban:before, .author_noban:before {
+    content: '×';
+    font-size: 20px;
+    position: absolute;
+    line-height: 16px;
+    margin-top: 1px;
+    margin-left: -1px;
+}
+
+@keyframes loadingAnimation {
+    0% {
+        color: #333333;
+    }
+
+    100% {
+        color: #eeeeee;
+    }
+}
+
+@-webkit-keyframes loadingAnimation /* Safari 和 Chrome */
+{
+    0% {
+        color: #333333;
+    }
+
+    100% {
+        color: #eeeeee;
+    }
+}
+
+.animate_1 {
+    animation-name: loadingAnimation;
+    animation-delay: 0ms;
+    animation-iteration-count: infinite;
+    animation-duration: 600ms;
+}
+
+.animate_2 {
+    animation-name: loadingAnimation;
+    animation-delay: 120ms;
+    animation-iteration-count: infinite;
+    animation-duration: 600ms;
+}
+
+.animate_3 {
+    animation-name: loadingAnimation;
+    animation-delay: 240ms;
+    animation-iteration-count: infinite;
+    animation-duration: 600ms;
+    -webkit-animation-name: loadingAnimation;
+    -webkit-animation-delay: 240ms;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-duration: 600ms;
+
+}
+
+.animate_4 {
+    animation-name: loadingAnimation;
+    animation-delay: 360ms;
+    animation-iteration-count: infinite;
+    animation-duration: 600ms;
+    -webkit-animation-name: loadingAnimation;
+    -webkit-animation-delay: 240ms;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-duration: 600ms;
+}
+
+.animate_5 {
+    animation-name: loadingAnimation;
+    animation-delay: 480ms;
+    animation-iteration-count: infinite;
+    animation-duration: 600ms;
+    -webkit-animation-name: loadingAnimation;
+    -webkit-animation-delay: 240ms;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-duration: 600ms;
+}
+
+#loading {
+    display: none;
+}

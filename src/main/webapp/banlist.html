@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1,user-scalable=no" name="viewport">
+    <title>CPN - Chinese Pixiv Novel</title>
+    <script src="js/jquery/jquery.js"></script>
+    <script src="js/jquery/jquery.cookie.js"></script>
+    <script src="js/bootstrap/bootstrap.js"></script>
+    <script src="js/xwv/xwv.js"></script>
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.css">
+    <!--<link rel="stylesheet" href="css/bootstrap/bootstrap-theme.css">-->
+    <link rel="stylesheet" href="css/xwv/xwv.css">
+    <link rel="stylesheet" href="css/pixiv/pixiv.css">
+    <link rel="stylesheet" href="css/jquery/jquery-ui.css">
+    <link rel="stylesheet" href="css/jquery/jquery-ui.structure.css">
+    <link rel="stylesheet" href="css/jquery/jquery-ui.theme.css">
+    <style>
+        .tag, .author {
+            border-color: #3d7699;
+            color: #3d7699;
+            margin-right: 14px;
+            margin-top: 6px;
+            margin-bottom: 6px;
+            padding-top: 3px;
+            padding-bottom: 2px;
+            padding-left: 7px;
+            padding-right: 7px;
+            font-size: 14px;
+        }
+    </style>
+    <script src="js/jquery/jquery-ui.js"></script>
+    <script src="js/xwv/header.js"></script>
+
+</head>
+<body style="font-size: 16px">
+
+
+<div class="container">
+
+    <div id="header"></div>
+
+
+    <div id="list" style="width: 100% ">
+
+        <div class="margin-top_10 font-bold color_444444">屏蔽的标签</div>
+        <div class=" margin-top_10 color_999999 msg">载入中</div>
+        <div id="tag_list" class="display_none  margin-top_10"></div>
+        <hr style="width: 100%" class="" id="line">
+        <div class="margin-top_10 font-bold color_444444">屏蔽的作者</div>
+        <div class=" margin-top_10 color_999999 msg">载入中</div>
+        <div id="author_list" class="display_none  margin-top_10"></div>
+    </div>
+    <hr style="width: 100%">
+</div>
+
+
+</body>
+<script>
+
+    xwv.Header.init($("#header"));
+
+    var loading = xwv.Header.getLoading();
+
+    xwv.Header.refresh(function () {
+        list();
+    });
+
+    function list() {
+        loading.slideDown();
+        $.ajax({
+            type: "get",
+            url: "user?task=getbanlist",
+            dataType: "json",
+            success: function (data) {
+                if (data.ban_list) {
+                    $(".msg").hide();
+                    var tag_list = $("#tag_list");
+                    tag_list.empty();
+
+                    var author_list = $("#author_list");
+                    author_list.empty();
+                    var tags = data.ban_list.baned_tags;
+                    var authors = data.ban_list.baned_authors;
+                    var tag_html = "";
+                    var author_html = "";
+
+
+                    for (var t_seq in tags) {
+//                        console.log(i);
+                        if (tags.hasOwnProperty(t_seq)) {
+                            var tag = tags[t_seq];
+                            tag_html += "<div class='inline-block tag radius-3 border_1px'>" + tag + "<span class='tag_noban' >&nbsp;&nbsp;</span></div>";
+                        }
+                    }
+                    tag_list.append(tag_html);
+                    tag_list.show();
+
+                    for (var a_seq in authors) {
+                        if (authors.hasOwnProperty(a_seq)) {
+                            var author = authors[a_seq];
+                            author_html += "<div class='inline-block author radius-3 border_1px'>" + author + "<span class='author_noban' ><input class='author_id' type='hidden' value='" + a_seq + "'>&nbsp;&nbsp;</span></div>";
+                        }
+                    }
+
+                    author_list.append(author_html);
+                    $("#line").show();
+                    author_list.show();
+                    BindAction();
+                }
+            }, complete: function () {
+                loading.slideUp();
+            }
+        });
+    }
+
+    list();
+
+    function BindAction() {
+        var tag = $(".tag");
+        var author = $(".author");
+        tag.click(function () {
+            $(".tag_noban").hide();
+            $(this).children(".tag_noban").show();
+            return false;
+        });
+
+        author.click(function () {
+            $(".author_noban").hide();
+            $(this).children(".author_noban").show();
+            return false;
+        });
+
+        $("html").click(function () {
+            $(".tag_noban").hide();
+            $(".author_noban").hide();
+        });
+
+//        tag.hover(function () {
+////            $(this).children(".tag_ban").show();
+//        }, function () {
+//            $(this).children(".tag_ban").hide();
+//        });
+        $(".tag_noban").click(function () {
+            var clone_tag = $(this).parent().clone();
+            clone_tag.children().remove();
+            RemoveBan("tag", clone_tag.text());
+//            list();
+        });
+
+//        $(".author").click(function () {
+//            AppendBan("author", $(this).find(".author_id").val());
+////            list();
+//        });
+
+
+        $(".author_noban").click(function () {
+            RemoveBan("author", $(this).children(".author_id").val());
+        });
+
+        $(".author_look").click(function () {
+
+        });
+
+
+    }
+
+    function AddBanTag(tag) {
+        return AppendCookie("BanedTag", tag);
+    }
+
+    function RemoveBanTag(tag) {
+        return RemoveCookie("BanedAuthor", tag);
+    }
+
+
+    function AddBanAuthor(id) {
+        return AppendCookie("BanedAuthor", id);
+    }
+
+
+    function RemoveBanAuthor(id) {
+        return RemoveCookie("BanedAuthor", id);
+    }
+
+
+    function AppendBan(key, value) {
+        loading.slideDown();
+        $.ajax({
+            type: "post",
+            url: "user?task=AppendBan",
+            data: {
+                value: value,
+                type: key
+            },
+            dataType: "json",
+            success: function (data) {
+                list();
+            },
+            complete: function () {
+                loading.slideUp();
+            }
+        });
+    }
+
+    function RemoveBan(key, value) {
+        loading.slideDown();
+        $.ajax({
+            type: "post",
+            url: "user?task=RemoveBan",
+            data: {
+                value: value,
+                type: key
+            },
+            dataType: "json",
+            success: function (data) {
+                list();
+            },
+            complete: function () {
+                loading.slideUp();
+            }
+        });
+    }
+
+
+    function AppendCookie(key, value) {
+        var values = String(value).split(/[ ]/);
+        var old = $.cookie(key) || "";
+
+        for (var i in values) {
+            var find = new RegExp(values[i] + "[ ]+");
+            var find_end = new RegExp(values[i] + "$");
+            if (!find.test(old) && !find_end.test(old)) {
+                if (old && old != "") {
+                    old += " ";
+                }
+                old += values[i];
+            }
+        }
+
+        $.cookie(key, old, {
+            expires: 30
+        });
+        return $.cookie(key);
+    }
+
+
+    function RemoveCookie(key, value) {
+        var values = String(value).split(/[ ]/);
+        var old = $.cookie(key) || "";
+
+        for (var i in values) {
+            var find = new RegExp(values[i] + "[ ]+");
+            var find_end = new RegExp(values[i] + "$");
+            old = old.replace(find, "");
+            old = old.replace(find_end, "");
+        }
+
+        $.cookie(key, old, {
+            expires: 30
+        });
+        return $.cookie(key);
+    }
+
+
+</script>
+
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1,user-scalable=no" name="viewport">
+    <title>CPN - Chinese Pixiv Novel</title>
+    <script src="js/jquery/jquery.js"></script>
+    <script src="js/jquery/jquery-ui.js"></script>
+    <script src="js/jquery/jquery.cookie.js"></script>
+    <script src="js/bootstrap/bootstrap.js"></script>
+    <script src="js/xwv/xwv.js"></script>
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.css">
+    <!--<link rel="stylesheet" href="css/bootstrap/bootstrap-theme.css">-->
+    <link rel="stylesheet" href="css/xwv/xwv.css">
+    <link rel="stylesheet" href="css/pixiv/pixiv.css">
+    <link rel="stylesheet" href="css/jquery/jquery-ui.css">
+    <link rel="stylesheet" href="css/jquery/jquery-ui.structure.css">
+    <link rel="stylesheet" href="css/jquery/jquery-ui.theme.css">
+    <script src="js/xwv/header.js"></script>
+</head>
+<body>
+<div class="container">
+
+    <div id="header"></div>
+
+    <div id="view" style="width: 100%" class="margin-top_10"></div>
+    <hr class="margin-top_5 margin-bottom_10" style="width: 100%">
+    <div id="guide" style="display: none">
+        <div style="width: 100%;" class="margin-top_5"><span>下一章&nbsp;：</span><span id="next">无</span></div>
+        <div style="width: 100%;" class="margin-top_5"><span>上一章&nbsp;：</span><span id="last">无</span></div>
+    </div>
+    <div class="margin-top_10 padding-bottom_20"><a href="javascript:;" class="back">返回列表</a></div>
+</div>
+</body>
+<script>
+    xwv.Header.init($("#header"));
+    var loading = xwv.Header.getLoading();
+
+
+    var id = getParam("id");
+    var backpage = getParam("backpage");
+
+    $(".back").unbind("click").click(function () {
+        if (backpage > 0) {
+            location.href = "index.html?page=" + backpage;
+        } else {
+            location.href = "index.html";
+        }
+    });
+
+
+    function view(id) {
+        if (!id) {
+            view.empty();
+            view.append("参数错误");
+        }
+        loading.slideDown();
+        $.ajax({
+            type: "get",
+            url: "novel?task=view&id=" + id,
+            dataType: "json",
+            success: function (data) {
+                if (data.novel) {
+                    var novel = data.novel;
+                    var view = $("#view");
+                    view.empty();
+                    view.append("" +
+                        "   <div>" +
+                        "       <div style='font-weight: bolder;font-size: 18px'>" + novel.title + "</div>" +
+                        "       <div class='author' style='color: #999999;margin-top: 10px'>" +
+                        "           <input type='hidden' id='author_id'  value='" + novel.user_id + "'>" +
+                        "          <span>作者：<a target='_blank' href='https://www.pixiv.net/member.php?id=" + novel.user_id + "'>" + novel.user_name + "</a></span><i class='glyphicon glyphicon-eye-close _tag_ban'></i>" +
+                        "       </div>" + (
+                            novel.series_title ? (
+                                "       <div class='author' style='color: #999999;margin-top: 10px'>" +
+                                "           <input type='hidden'  value='" + novel.series_id + "'>" +
+                                "           <span>" + "系列：<a target='_blank' href='https://www.pixiv.net/series.php?id=" + novel.series_id + "'>" + novel.series_title + "</a></span>" +
+                                "       </div>" ) : ""
+                        ) +
+                        "   </div>" +
+                        "   <hr class='margin-top_10 margin-bottom_10'>" +
+                        "   <pre style='margin-top: 10px;white-space:pre-wrap;line-height: 26px;border: none;background-color: #FFFFFF;padding: 3px;font-size: 15px' >" + novel.content + "</pre>" +
+                        "</div>");
+                    if (novel.series_title) {
+                        fillNext(id);
+                        fillLast(id);
+                        $("#guide").show();
+                    }
+                    $("._tag_ban").unbind("click").click(function () {
+                        AppendBan("author", $(this).parent().children("input").val());
+                    });
+
+                }
+            },
+            complete: function () {
+                loading.slideUp();
+            }
+        });
+
+
+    }
+
+    view(id);
+
+    function fillNext(id) {
+        $.ajax({
+            type: "get",
+            url: "novel?task=next&id=" + id,
+            dataType: "json",
+            success: function (data) {
+                var n = $("#next");
+                n.empty();
+                if (data.id) {
+                    n.append("<a href='view.html?id=" + data.id + "'>" + data.title + "</a>")
+                } else {
+                    n.text("无");
+                }
+            }
+        });
+    }
+
+    function fillLast(id) {
+        $.ajax({
+            type: "get",
+            url: "novel?task=last&id=" + id,
+            dataType: "json",
+            success: function (data) {
+                var l = $("#last");
+                l.empty();
+                if (data.id) {
+                    l.append("<a href='view.html?id=" + data.id + "'>" + data.title + "</a>")
+                } else {
+                    l.text("无");
+                }
+            }
+        });
+    }
+
+    function AppendBan(key, value) {
+        loading.slideDown();
+        $.ajax({
+            type: "post",
+            url: "user?task=AppendBan",
+            data: {
+                value: value,
+                type: key
+            },
+            dataType: "json",
+            success: function (data) {
+            },
+            complete: function () {
+                loading.slideUp();
+            }
+        });
+    }
+
+
+</script>
+
+</html>

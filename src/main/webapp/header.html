@@ -1,0 +1,218 @@
+<div id='login_area' class='modal fade ' tabindex='-1'>
+    <div class='modal-dialog width_300 margin-top_100' style='margin: auto;margin-top: 100px'>
+        <div class=' modal-content '>
+            <div class='modal-body'>
+                <div style='margin-bottom: 5px'>
+                    <button type='button' class='close' data-dismiss='modal'>
+                        &times;
+                    </button>
+                    <ul class='nav nav-tabs'>
+                        <li class='active'><a style='padding: 5px;padding-left: 10px;padding-right: 10px'
+                                              href='#login_tab' data-toggle='tab'>登陆</a>
+                        </li>
+                        <li><a class='' style='padding: 5px;padding-left: 10px;padding-right: 10px'
+                               href='#reg_tab'
+                               data-toggle='tab'>注册</a>
+                        </li>
+                    </ul>
+                </div>
+                <div style='padding-top: 2px;padding-bottom: 8px'>
+                    <div id='dialog_loading' class='width_100p text-center bg-info radius-5 '
+                         style='display: none'>
+                        <span class='font-bold'>
+                            <span class='animate_1'>·</span>
+                            <span class='animate_2'>·</span>
+                            <span class='animate_3'>·</span>
+                            <span class='animate_4'>·</span>
+                            <span class='animate_5'>·</span>
+                        </span>
+                    </div>
+                </div>
+
+
+                <div class='tab-content'>
+                    <div class='tab-pane fade in active' id='login_tab'>
+
+                        <div class='form-group'>
+                            <input class='form-control' style='width: 100%' type='text' placeholder='用户名'
+                                   id='username'>
+                        </div>
+                        <div class='form-group no_margin'>
+                            <input class='form-control' style='width: 100%' type='password' placeholder='密码'
+                                   id='password'>
+                        </div>
+                        <div style='padding-top: 7px;padding-bottom: 8px'>
+                            <div id='login_alert' class='alert  alert-danger no_margin '
+                                 style='padding: 5px;display:none'>
+                                <button type='button' class='close'>
+                                    &times;
+                                </button>
+                                <span class='alert_msg'></span>
+                            </div>
+                        </div>
+                        <div class='form-group'>
+                            <button class='btn btn-default width_100p' id='login'>登陆</button>
+                        </div>
+                    </div>
+
+                    <div class='tab-pane fade' id='reg_tab'>
+
+                        <div class='form-group'>
+                            <input class='form-control' style='width: 100%' type='text' placeholder='用户名'
+                                   id='reg_username'>
+                        </div>
+                        <div class='form-group'>
+                            <input class='form-control' style='width: 100%' type='password' placeholder='密码'
+                                   id='reg_password'>
+                        </div>
+                        <div class='form-group no_margin'>
+                            <input class='form-control' style='width: 100%' type='password' placeholder='再次输入密码'
+                                   id='reg_check_password'>
+                        </div>
+                        <div style='padding-top: 7px;padding-bottom: 8px'>
+                            <div id='reg_alert' class='alert  alert-danger no_margin '
+                                 style='padding: 5px;display:none'>
+                                <button type='button' class='close'>
+                                    &times;
+                                </button>
+                                <span class='alert_msg'></span>
+                            </div>
+                        </div>
+                        <div class='form-group'>
+                            <button class='btn btn-default width_100p' id='reg'>注册</button>
+                        </div>
+                    </div>
+                    <div>
+                        <hr class='no_margin margin-top_20' style='width: 100%;'>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id='modify_modal' class='modal fade ' tabindex='-1'>
+    <div class='modal-dialog width_300 margin-top_100' style='margin: auto;margin-top: 100px'>
+        <div class=' modal-content '>
+            <div class='modal-body'>
+                <div style='margin-bottom: 5px'>
+                    <button type='button' class='close' data-dismiss='modal'>
+                        &times;
+                    </button>
+                    <strong>修改密码</strong>
+                </div>
+                <div style='padding-top: 2px;padding-bottom: 8px'>
+                    <div id='modify_loading' class='width_100p text-center bg-info radius-5 '
+                         style='display: none'>
+                        <span class='font-bold'>
+                            <span class='animate_1'>·</span>
+                            <span class='animate_2'>·</span>
+                            <span class='animate_3'>·</span>
+                            <span class='animate_4'>·</span>
+                            <span class='animate_5'>·</span>
+                        </span>
+                    </div>
+                </div>
+
+
+                <div class='form-group'>
+                    <input class='form-control' style='width: 100%' type='password' placeholder='原密码'
+                           id='old_password'>
+                </div>
+                <div class='form-group'>
+                    <input class='form-control' style='width: 100%' type='password' placeholder='新密码'
+                           id='new_password'>
+                </div>
+                <div class='form-group no_margin'>
+                    <input class='form-control' style='width: 100%' type='password' placeholder='再次输入新密码'
+                           id='new_check_password'>
+                </div>
+                <div style='padding-top: 7px;padding-bottom: 8px'>
+                    <div id='modify_alert' class='alert  alert-danger no_margin '
+                         style='padding: 5px;display:none'>
+                        <button type='button' class='close'>
+                            &times;
+                        </button>
+                        <span class='alert_msg'></span>
+                    </div>
+                </div>
+                <div class='form-group'>
+                    <button class='btn btn-default width_100p' id='modify_password'>提交</button>
+                </div>
+            </div>
+            <div>
+                <hr class='no_margin margin-top_20' style='width: 100%;'>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id='loading' class='width_100p text-center bg-info radius-5' style='display: none'>
+            <span class='font-bold'>
+                <span class='animate_1'>·</span>
+                <span class='animate_2'>·</span>
+                <span class='animate_3'>·</span>
+                <span class='animate_4'>·</span>
+                <span class='animate_5'>·</span>
+            </span>
+</div>
+
+<div class='inline-table width_100p'>
+
+    <div class='font-size_40 table-cell  width_150' style='color:#0096FF;font-weight: 300 '>
+        <span id='logo' style='cursor: pointer'>CPN</span>
+    </div>
+    <div class='table-cell valign_middle width_min' id='login_btn_area'>
+        <div class='inline-block pull-right '>
+                    <span>
+                        <button class='btn btn-sm btn-info pull-right ' data-toggle='modal' data-target='#login_area'
+                                id='btn_login'>登陆</button>
+                    </span>
+
+        </div>
+    </div>
+    <div class='table-cell valign_middle width_min  display_none' id='user_info'>
+
+        <div class='pull-right'>
+            <div class='table-cell valign_middle dropdown'>
+
+                <div class='inline-block text-right' data-toggle='dropdown'>
+                    <div class=''>
+                        <div class='inline-block' style='cursor: pointer;font-size:16px;'>
+                            <span id='user'></span>
+                            <b class='caret'></b>
+                        </div>
+
+                    </div>
+                </div>
+                <ul class='dropdown-menu pull-right'>
+                    <li>
+                        <a href='banlist.html' style="color: #666666">屏蔽列表</a>
+                    </li>
+                    <li>
+                        <a href='javascript:;' style="color: #666666" id='a_switch'>
+                            <span>奇怪的开关</span>
+                            <div class='inline-block margin-left_20'>
+                                <div id='switch' class='display_none ui-slider inline-block'
+                                     style='border-radius: 6px;height: 10px;width: 16px;'>
+                                    <div class='ui-slider-handle ' id='handle'
+                                         style='height: 14px;width: 14px;margin-top: 1px;margin-left:-7px;border-radius:50%'></div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li data-toggle='modal' data-target='#modify_modal'>
+                        <a href='javascript:;' style="color: #666666">修改密码</a>
+                    </li>
+                    <li>
+                        <a href='javascript:;' id='logout' style="color: #666666">注销</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<hr style='width: 100%' class='no_margin'>

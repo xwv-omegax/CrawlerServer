@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1,user-scalable=no" name="viewport">
+    <title>CPN - Chinese Pixiv Novel</title>
+    <script src="js/jquery/jquery.js"></script>
+    <script src="js/jquery/jquery-ui.js"></script>
+    <script src="js/jquery/jquery.cookie.js"></script>
+    <script src="js/bootstrap/bootstrap.js"></script>
+    <script src="js/xwv/xwv.js"></script>
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.css">
+    <!--<link rel="stylesheet" href="css/bootstrap/bootstrap-theme.css">-->
+    <link rel="stylesheet" href="css/xwv/xwv.css">
+    <link rel="stylesheet" href="css/pixiv/pixiv.css">
+    <link rel="stylesheet" href="css/jquery/jquery-ui.css">
+    <link rel="stylesheet" href="css/jquery/jquery-ui.structure.css">
+    <link rel="stylesheet" href="css/jquery/jquery-ui.theme.css">
+    <script src="js/xwv/header.js"></script>
+</head>
+<body style="font-size: 16px">
+
+
+<div class="container">
+
+    <div id="header"></div>
+    <div class="margin-top_10 color_666666" style="font-size: 13px">
+        <label for="sort">排序方式&nbsp;</label>
+        <select id="sort">
+            <option value="HOT" selected="selected">最热</option>
+            <option value="TIME">最新</option>
+        </select>
+
+    </div>
+    <div id="list" style="width: 100% ">
+        <div class="text-center margin-top_20 color_999999" id="msg">载入中</div>
+    </div>
+    <hr style="width: 100%;margin-top: 20px;margin-bottom: 10px">
+    <div class="color_999999 text-center width_100p" style="font-size: 12px">Tip：点击标签中的<i
+            class='glyphicon glyphicon-eye-close _tag_ban' style="display: inline-block"></i>&nbsp;屏蔽标签
+    </div>
+    <hr class="no_margin" style="margin-top: 10px">
+    <div class="center-block text-center" style="padding-bottom: 30px;margin-top: 20px">
+        <div class="inline-table">
+            <span class="table-cell valign_middle"><button class="btn btn-sm btn-default margin-right_20"
+                                                           id="pu">上一页</button></span>
+            <span class="table-cell valign_middle padding-x_30  " style="font-size: 16px">
+                <span id="page"></span>
+                <strong>/</strong>
+                <span id="maxPage"></span>
+            </span>
+            <span class="table-cell valign_middle"><button class="btn btn-sm btn-default margin-left_20"
+                                                           id="pd">下一页</button></span>
+        </div>
+    </div>
+</div>
+
+</body>
+<script>
+
+    xwv.Header.init($("#header"));
+    xwv.Header.refresh(function () {
+        list(page);
+    });
+
+    var page = 1;
+    var maxPage = 1;
+    page = getParam("page") ? getParam("page") : 1;
+    $("#pu").unbind("click").click(function () {
+        if (page > 1) {
+            page--;
+        }
+//        list(page);
+        location.href = "index.html?page=" + page;
+    });
+    $("#pd").unbind("click").click(function () {
+        page++;
+//        list(page);
+        location.href = "index.html?page=" + page;
+    });
+
+    var loading = xwv.Header.getLoading();
+
+    var sort = $("#sort");
+    (function () {
+        var sortType = $.cookie("SORT");
+        var options = sort.children("option");
+        if (sortType) {
+            for (var i in options) {
+                if (options.hasOwnProperty(i)) {
+                    var sortTypeStr = String(sortType);
+                    var v = $(options[i]).val();
+                    if (sortTypeStr.toLowerCase() == String(v).toLowerCase()) {
+                        sort.val(v);
+                        break;
+                    }
+                }
+            }
+        }
+    })();
+
+
+    function list(page) {
+        loading.slideDown();
+        $.ajax({
+            type: "get",
+            url: "novel?task=list&page=" + page,
+            dataType: "json",
+            success: function (data) {
+                if (data.list) {
+                    var list = $("#list");
+                    list.empty();
+                    for (var seq in data.list) {
+//                        console.log(i);
+
+                        if (seq == "max_page") {
+                            maxPage = data.list.max_page;
+//                            console.log(maxPage);
+                            continue;
+                        }
+
+                        var info = data.list[seq];
+                        var id = info.id;
+
+                        var tag_a = info.tag_a;
+                        var tags = "";
+                        for (var i in tag_a) {
+                            if (tag_a.hasOwnProperty(i) && tag_a[i] != '') {
+                                tags += "<div class='tag inline-block' style='padding-right: 3px;margin: 4px'><span class=' radius-2 bg-info' style='padding: 2px'>" + tag_a[i] + "<i class='glyphicon glyphicon-eye-close tag_ban'></i></span></div>";
+                            }
+                        }
+
+
+                        list.append("" +
+                            "<div style='padding-top: 10px;padding-bottom: 10px'>" +
+                            "   <div>" +
+                            "       <div>" +
+                            "       <a href='view.html?id=" + id + "&backpage=" + page + "'>" + info.title + "</a>" +
+                            "       </div>" +
+                            "   <div style='color: #666666;margin-top: 5px;font-size: 14px'>" + tags + "</div>" +
+                            "       <div style='color: #999999;margin-top: 5px;font-size: 14px'>" +
+                            "           <span class='author'>" +
+                            "               作者:" + info.user_name + "<input type='hidden' class='author_id' value='" + info.user_id + "'>" +
+                            "           </span>&nbsp;&nbsp;字数:" + info.text_length + "&nbsp;&nbsp;赞:" + info.count + "&nbsp;&nbsp;收藏:" + info.bookmark_count + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + info.time +
+                            "       </div>" +
+                            "   </div>" +
+                            "</div>");
+
+                    }
+                    BindAction();
+                }
+                $("#page").text(page);
+                $("#maxPage").text(maxPage);
+                if (page == 1) {
+                    $("#pu").attr("disabled", "disabled");
+                } else {
+                    $("#pu").removeAttr("disabled");
+                }
+
+                if (page >= maxPage) {
+                    $("#pd").attr("disabled", "disabled");
+                } else {
+                    $("#pd").removeAttr("disabled");
+                }
+            },
+            complete: function () {
+                loading.slideUp();
+            },
+            error: function () {
+                var msg = $("#msg");
+                msg.empty();
+                msg.append("载入失败");
+            }
+        });
+    }
+
+    list(page);
+
+    function BindAction() {
+        var tag = $(".tag");
+        tag.unbind("click").click(function () {
+            $(".tag_ban").hide();
+            $(this).children().children(".tag_ban").show();
+            return false;
+        });
+
+        $("html").unbind("click").click(function () {
+            $(".tag_ban").hide();
+        });
+//        tag.hover(function () {
+////            $(this).children(".tag_ban").show();
+//        }, function () {
+//            $(this).children(".tag_ban").hide();
+//        });
+        $(".tag_ban").unbind("click").click(function () {
+            AppendBan("tag", $(this).parent().text());
+//            list(page);
+        });
+
+        $(".author").unbind("click").click(function () {
+//            AppendBan("author", $(this).find(".author_id").val());
+//            list(page);
+        });
+
+
+        $(".author_ban").unbind("click").click(function () {
+            AppendCookie("BanedAuthor", $(this).text());
+            list(page);
+        });
+
+        $(".author_look").unbind("click").click(function () {
+
+        });
+
+        sort.change(function () {
+//            console.log($(this).val());
+            $.cookie("SORT", $(this).val());
+            list(page);
+        });
+
+
+        $("#page").unbind("click").click(function () {
+            var p = $(this);
+            if (!p.children("input").size()) {
+
+                var t = p.text();
+                p.empty();
+                p.append("<input placeholder='' style='width: 40px;text-align: center' type='text' value='" + t + "'>")
+                var input = p.children("input");
+                input.focus();
+                input.blur(function () {
+                    var v = $(this).val();
+                    p.empty();
+                    var regex = /^[0-9]*$/;
+                    if (regex.test(v)) {
+                        p.text(v);
+                        if (v != t) {
+//                        list(v);
+                            location.href = "index.html?page=" + v;
+                        }
+                    } else {
+                        p.text(t);
+                    }
+
+
+                });
+                input.unbind("click").click(function () {
+                    return false;
+                });
+
+                input.keydown(function (event) {
+                    if (event.which == 13) {
+                        $(this).blur();
+                    }
+                })
+
+            }
+        });
+
+    }
+
+    function AddBanTag(tag) {
+        return AppendCookie("BanedTag", tag);
+    }
+
+    function RemoveBanTag(tag) {
+        return RemoveCookie("BanedAuthor", tag);
+    }
+
+
+    function AddBanAuthor(id) {
+        return AppendCookie("BanedAuthor", id);
+    }
+
+
+    function RemoveBanAuthor(id) {
+        return RemoveCookie("BanedAuthor", id);
+    }
+
+
+    function AppendBan(key, value) {
+        loading.slideDown();
+        $.ajax({
+            type: "post",
+            url: "user?task=AppendBan",
+            data: {
+                value: value,
+                type: key
+            },
+            dataType: "json",
+            success: function (data) {
+                list(page);
+            },
+            complete: function () {
+                loading.slideUp();
+            }
+        });
+    }
+
+
+    function AppendCookie(key, value) {
+        var values = String(value).split(/[ ]/);
+        var old = $.cookie(key) || "";
+
+        for (var i in values) {
+            var find = new RegExp(values[i] + "[ ]+");
+            var find_end = new RegExp(values[i] + "$");
+            if (!find.test(old) && !find_end.test(old)) {
+                if (old && old != "") {
+                    old += " ";
+                }
+                old += values[i];
+            }
+        }
+
+        $.cookie(key, old, {
+            expires: 30
+        });
+        return $.cookie(key);
+    }
+
+
+    function RemoveCookie(key, value) {
+        var values = String(value).split(/[ ]/);
+        var old = $.cookie(key) || "";
+
+        for (var i in values) {
+            var find = new RegExp(values[i] + "[ ]+");
+            var find_end = new RegExp(values[i] + "$");
+            old = old.replace(find, "");
+            old = old.replace(find_end, "");
+        }
+
+        $.cookie(key, old, {
+            expires: 30
+        });
+        return $.cookie(key);
+    }
+
+
+</script>
+
+</html>

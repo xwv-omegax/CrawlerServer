@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1,user-scalable=no" name="viewport">
+    <title>CHPN - Chinese Pixiv Novel</title>
+    <script src="js/jquery/jquery.js"></script>
+    <script src="js/jquery/jquery-ui.js"></script>
+    <script src="js/jquery/jquery.cookie.js"></script>
+    <script src="js/bootstrap/bootstrap.js"></script>
+    <script src="js/xwv/xwv.js"></script>
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.css">
+    <!--<link rel="stylesheet" href="css/bootstrap/bootstrap-theme.css">-->
+    <link rel="stylesheet" href="css/xwv/xwv.css">
+    <link rel="stylesheet" href="css/pixiv/pixiv.css">
+    <link rel="stylesheet" href="css/jquery/jquery-ui.css">
+    <link rel="stylesheet" href="css/jquery/jquery-ui.structure.css">
+    <link rel="stylesheet" href="css/jquery/jquery-ui.theme.css">
+
+
+</head>
+<body style="font-size: 16px">
+
+
+<div class="container">
+
+    <div id="loading" class="width_100p text-center bg-info radius-5" style="display: none">
+    <span class="font-bold">
+        <span class="animate_1">·</span>
+        <span class="animate_2">·</span>
+        <span class="animate_3">·</span>
+        <span class="animate_4">·</span>
+        <span class="animate_5">·</span>
+    </span>
+    </div>
+
+    <!--<div class="border_1px_eeeeee" style="background-color: #fcfcfc;padding: 10px;border-radius: 10px;">-->
+    <div class="inline-table width_100p">
+        <div class="font-size_40 table-cell  width_150" style="color:#0096FF;font-weight: 300 ">
+            <span>CHPN</span>
+        </div>
+        <!--<div class="table-cell valign_middle width_60">-->
+
+        <!--</div>-->
+        <!--<div class="table-cell valign_middle width_60">-->
+
+        <!--</div>-->
+        <div class="table-cell valign_middle width_min" id="login_btn_area">
+            <div class="inline-block pull-right ">
+                    <span>
+                        <button class="btn btn-sm btn-info pull-right " data-toggle="modal" data-target="#login_area"
+                                id="btn_login">登陆</button>
+                    </span>
+
+            </div>
+        </div>
+
+        <div class="table-cell valign_middle width_min dropdown display_none" id="user_info">
+
+            <div class="pull-right " data-toggle="dropdown">
+                <div class="table-cell valign_middle">
+
+                    <div class="inline-block text-right">
+                        <div class="">
+                            <div class="inline-block">
+                                <span id="user"></span>
+                                <!--<div style="font-size: 12px"><a href="javascript:;">注销</a></div>-->
+                                <b class="caret"></b>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="table-cell valign_middle">-->
+                <!--<div style="width: 40px;height: 40px;border-radius: 50%;overflow: hidden"-->
+                <!--class="border_1px_cccccc pull-right">-->
+                <!--<img id="head" class="width_100p" src="image/akari.jpg">-->
+                <!--</div>-->
+
+                <!--</div>-->
+            </div>
+            <ul class="dropdown-menu pull-right">
+                <li>
+                    <a href="banlist.html">屏蔽列表</a>
+                </li>
+                <li>
+                    <a href="javascript:;" id="a_switch">
+                        奇怪的开关
+                        <div class="inline-block margin-left_20">
+                            <div id="switch" class="display_none ui-slider inline-block"
+                                 style="border-radius: 6px;height: 10px;width: 16px;">
+                                <div class="ui-slider-handle " id="handle"
+                                     style="height: 14px;width: 14px;margin-top: 1px;margin-left:-7px;border-radius:50%"></div>
+                            </div>
+                        </div>
+                    </a>
+
+                </li>
+                <li>
+                    <a href="javascript:;" id="logout">注销</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <hr style="width: 100%" class="no_margin">
+
+    <div id="list" style="width: 100% ">
+        <div class="text-center margin-top_20 color_999999" id="msg">载入中</div>
+    </div>
+    <hr style="width: 100%">
+    <div class="center-block text-center" style="padding-bottom: 30px;margin-top: 20px">
+        <div class="inline-table">
+            <span class="table-cell valign_middle"><button class="btn btn-sm btn-default margin-right_20"
+                                                           id="pu">上一页</button></span>
+            <span class="table-cell valign_middle padding-x_30  " style="font-size: 16px">
+                <span id="page"></span>
+                <strong>/</strong>
+                <span id="maxPage"></span>
+            </span>
+            <span class="table-cell valign_middle"><button class="btn btn-sm btn-default margin-left_20"
+                                                           id="pd">下一页</button></span>
+        </div>
+    </div>
+</div>
+
+<div id="login_area" class="modal fade " tabindex="-1">
+    <div class="modal-dialog width_300 margin-top_100" style="margin: auto;margin-top: 100px">
+        <div class=" modal-content ">
+
+            <div class="modal-body">
+                <div style="margin-bottom: 5px">
+                    <button type="button" class="close" data-dismiss="modal">
+                        &times;
+                    </button>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a style="padding: 5px;padding-left: 10px;padding-right: 10px"
+                                              href="#login_tab" data-toggle="tab">登陆</a>
+                        </li>
+                        <li><a class="" style="padding: 5px;padding-left: 10px;padding-right: 10px"
+                               href="#reg_tab"
+                               data-toggle="tab">注册</a>
+                        </li>
+                    </ul>
+
+
+                </div>
+                <!--<hr style="width: 100%;" class="no_margin">-->
+                <div style="padding-top: 2px;padding-bottom: 8px">
+                    <div id="dialog_loading" class="width_100p text-center bg-info radius-5 "
+                         style="display: none">
+                        <span class="font-bold">
+                            <span class="animate_1">·</span>
+                            <span class="animate_2">·</span>
+                            <span class="animate_3">·</span>
+                            <span class="animate_4">·</span>
+                            <span class="animate_5">·</span>
+                        </span>
+                    </div>
+                </div>
+
+
+                <div class="tab-content">
+                    <div class="tab-pane fade in active" id="login_tab">
+
+                        <div class="form-group">
+                            <input class="form-control" style="width: 100%" type="text" placeholder="用户名"
+                                   id="username">
+                        </div>
+                        <div class="form-group no_margin">
+                            <input class="form-control" style="width: 100%" type="password" placeholder="密码"
+                                   id="password">
+                        </div>
+                        <div style="padding-top: 7px;padding-bottom: 8px">
+                            <div id="login_alert" class="alert  alert-danger no_margin "
+                                 style="padding: 5px;display:none">
+                                <button type="button" class="close">
+                                    &times;
+                                </button>
+                                <span class="alert_msg"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-default width_100p" id="login">登陆</button>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="reg_tab">
+
+                        <div class="form-group">
+                            <input class="form-control" style="width: 100%" type="text" placeholder="用户名"
+                                   id="reg_username">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" style="width: 100%" type="password" placeholder="密码"
+                                   id="reg_password">
+                        </div>
+                        <div class="form-group no_margin">
+                            <input class="form-control" style="width: 100%" type="password" placeholder="再次输入密码"
+                                   id="reg_check_password">
+                        </div>
+                        <div style="padding-top: 7px;padding-bottom: 8px">
+                            <div id="reg_alert" class="alert  alert-danger no_margin "
+                                 style="padding: 5px;display:none">
+                                <button type="button" class="close">
+                                    &times;
+                                </button>
+                                <span class="alert_msg"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-default width_100p" id="reg">注册</button>
+                        </div>
+                    </div>
+                    <div>
+                        <!--<span style="max-width: 100%"></span>-->
+                        <hr class="no_margin margin-top_20" style="width: 100%;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+<script>
+    var page = 1;
+    var maxPage = 1;
+    page = getParam("page") ? getParam("page") : 1;
+    $("#pu").click(function () {
+        if (page > 1) {
+            page--;
+        }
+//        list(page);
+        location.href = "index.html?page=" + page;
+    });
+    $("#pd").click(function () {
+        page++;
+//        list(page);
+        location.href = "index.html?page=" + page;
+    });
+
+    var loading = $("#loading");
+    var dialog_loading = $("#dialog_loading");
+    $('#login_area').on('hidden.bs.modal', function () {
+        $("#username").val("");
+        $("#password").val("");
+        $("#reg_username").val("");
+        $("#reg_password").val("");
+        $("#reg_check_password").val("");
+    });
+
+
+    function RegAlert(msg) {
+        var alert = $("#reg_alert");
+        DialogAlert(alert, msg);
+        alert.children(".close").click(function () {
+            RegAlert();
+        });
+    }
+
+    function LoginAlert(msg) {
+        var alert = $("#login_alert");
+        DialogAlert(alert, msg);
+        alert.children(".close").click(function () {
+            LoginAlert();
+        });
+    }
+
+    function DialogAlert(alert, msg) {
+        var d_msg = alert.children(".alert_msg");
+        d_msg.empty();
+        d_msg.text(msg);
+        if (msg && msg.trim()) {
+            alert.slideDown();
+        } else {
+            alert.slideUp();
+        }
+    }
+
+
+    var sw = $("#switch").slider({
+        range: "min",
+        min: 0,
+        max: 1,
+        value: $.cookie("R18"),
+        change: function (event, ui) {
+            var r18 = $.cookie("R18");
+            if (r18 != ui.value) {
+                $.cookie("R18", ui.value);
+                list(page);
+            }
+        }
+    });
+
+
+    $("#handle").click(function () {
+        var v = sw.slider("value");
+        sw.slider("value", 1 - v);
+        return false;
+    });
+
+    $("#a_switch").click(function () {
+        $("#handle").click();
+    });
+
+    function list(page) {
+        loading.slideDown();
+        $.ajax({
+            type: "get",
+            url: "novel?task=list&page=" + page,
+            dataType: "json",
+            success: function (data) {
+                RefreshLoginArea();
+
+                if (data.list) {
+                    var list = $("#list");
+                    list.empty();
+                    for (var seq in data.list) {
+//                        console.log(i);
+
+                        if (seq == "max_page") {
+                            maxPage = data.list.max_page;
+//                            console.log(maxPage);
+                            continue;
+                        }
+
+                        var info = data.list[seq];
+                        var id = info.id;
+
+                        var tag_a = info.tag_a;
+                        var tags = "";
+                        for (var i in tag_a) {
+                            if (tag_a.hasOwnProperty(i) && tag_a[i] != '') {
+                                tags += "<div class='tag inline-block' style='padding-right: 3px;margin: 4px'><span class=' radius-2 bg-info' style='padding: 2px'>" + tag_a[i] + "<i class='glyphicon glyphicon-eye-close tag_ban'></i></span></div>";
+                            }
+                        }
+
+
+                        list.append("" +
+                            "<div style='padding-top: 10px;padding-bottom: 10px'>" +
+                            "   <div>" +
+                            "       <div>" +
+                            "       <a href='view.html?id=" + id + "&backpage=" + page + "'>" + info.title + "</a>" +
+                            "       </div>" +
+                            "   <div style='color: #666666;margin-top: 5px;font-size: 14px'>" + tags + "</div>" +
+                            "       <div style='color: #999999;margin-top: 5px;font-size: 14px'>" +
+                            "           <span class='author'>" +
+                            "               作者:" + info.user_name + "<input type='hidden' class='author_id' value='" + info.user_id + "'>" +
+                            "           </span>&nbsp;&nbsp;字数:" + info.text_length + "&nbsp;&nbsp;赞:" + info.count + "&nbsp;&nbsp;收藏:" + info.bookmark_count + "" +
+                            "       </div>" +
+                            "   </div>" +
+                            "</div>");
+
+                    }
+                    BindAction();
+                }
+                $("#page").text(page);
+                $("#maxPage").text(maxPage);
+                if (page == 1) {
+                    $("#pu").attr("disabled", "disabled");
+                } else {
+                    $("#pu").removeAttr("disabled");
+                }
+
+                if (page >= maxPage) {
+                    $("#pd").attr("disabled", "disabled");
+                } else {
+                    $("#pd").removeAttr("disabled");
+                }
+            },
+            complete: function () {
+                loading.slideUp();
+            },
+            error: function () {
+                var msg = $("#msg");
+                msg.empty();
+                msg.append("载入失败");
+            }
+        });
+    }
+
+    list(page);
+
+    function BindAction() {
+        var tag = $(".tag");
+        tag.click(function () {
+            $(".tag_ban").hide();
+            $(this).children().children(".tag_ban").show();
+            return false;
+        });
+
+        $("html").click(function () {
+            $(".tag_ban").hide();
+        });
+//        tag.hover(function () {
+////            $(this).children(".tag_ban").show();
+//        }, function () {
+//            $(this).children(".tag_ban").hide();
+//        });
+        $(".tag_ban").click(function () {
+            AppendBan("tag", $(this).parent().text());
+//            list(page);
+        });
+
+        $(".author").click(function () {
+//            AppendBan("author", $(this).find(".author_id").val());
+//            list(page);
+        });
+
+
+        $(".author_ban").click(function () {
+            AppendCookie("BanedAuthor", $(this).text());
+            list(page);
+        });
+
+        $(".author_look").click(function () {
+
+        });
+
+        $("#login").click(function () {
+            var username = $("#username").val();
+            var password = $("#password").val();
+            if (!username.trim() || !password.trim()) {
+                LoginAlert("用户名、密码不能为空");
+                return;
+            }
+            LoginAlert();
+            Login(username, password);
+        });
+
+        $("#logout").click(function () {
+            $.cookie("UID", "");
+            $.cookie("USERNAME", "");
+            list(page);
+        });
+
+        $("#reg").click(function () {
+            var username = $("#reg_username").val();
+            var password = $("#reg_password").val();
+            var ck_password = $("#reg_check_password").val();
+
+            if (!username.trim() || !password.trim()) {
+                RegAlert("用户名、密码不能为空");
+                return;
+            }
+
+            if (ck_password == password) {
+                RegAlert();
+                Register(username, password);
+            } else {
+                RegAlert("两次输入的密码不一致");
+            }
+        });
+
+        $("#page").click(function () {
+            var p = $(this);
+            if (!p.children("input").size()) {
+
+                var t = p.text();
+                p.empty();
+                p.append("<input placeholder='' style='width: 40px;text-align: center' type='text' value='" + t + "'>")
+                var input = p.children("input");
+                input.focus();
+                input.blur(function () {
+                    var v = $(this).val();
+                    p.empty();
+                    var regex = /^[0-9]*$/;
+                    if (regex.test(v)) {
+                        p.text(v);
+                        if (v != t) {
+//                        list(v);
+                            location.href = "index.html?page=" + v;
+                        }
+                    } else {
+                        p.text(t);
+                    }
+
+
+                });
+                input.click(function () {
+                    return false;
+                });
+
+                input.keydown(function (event) {
+                    if (event.which == 13) {
+                        $(this).blur();
+                    }
+                })
+
+            }
+        });
+
+    }
+
+    function AddBanTag(tag) {
+        return AppendCookie("BanedTag", tag);
+    }
+
+    function RemoveBanTag(tag) {
+        return RemoveCookie("BanedAuthor", tag);
+    }
+
+
+    function AddBanAuthor(id) {
+        return AppendCookie("BanedAuthor", id);
+    }
+
+
+    function RemoveBanAuthor(id) {
+        return RemoveCookie("BanedAuthor", id);
+    }
+
+
+    function AppendBan(key, value) {
+        loading.slideDown();
+        $.ajax({
+            type: "post",
+            url: "user?task=AppendBan",
+            data: {
+                value: value,
+                type: key
+            },
+            dataType: "json",
+            success: function (data) {
+                list(page);
+            },
+            complete: function () {
+                loading.slideUp();
+            }
+        });
+    }
+
+    function Register(username, password) {
+        dialog_loading.slideDown();
+        $.ajax({
+            type: "post",
+            url: "user?task=Register",
+            data: {
+                username: username,
+                password: password,
+            },
+            dataType: "json",
+            success: function (data) {
+                if (data.success) {
+                    list(page);
+                    $("#login_area").modal("hide");
+                }
+
+                RegAlert(data.msg);
+
+            },
+            complete: function () {
+                dialog_loading.slideUp();
+            }
+        });
+    }
+
+
+    function Login(username, password) {
+        dialog_loading.slideDown();
+        $.ajax({
+            type: "post",
+            url: "user?task=Login",
+            data: {
+                username: username,
+                password: password
+            },
+            dataType: "json",
+            success: function (data) {
+                if (data.success) {
+                    list(page);
+                    $("#login_area").modal("hide");
+                }
+                LoginAlert(data.msg);
+
+            },
+            complete: function () {
+                dialog_loading.slideUp();
+            }
+        });
+    }
+
+    function RefreshLoginArea() {
+        if ($.cookie("UID") && $.cookie("UID") > 0) {
+            $("#login_btn_area").hide();
+            $("#user_info").show();
+            $("#user").text($.cookie("USERNAME") ? $.cookie("USERNAME") : "");
+            $(sw).show();
+
+        } else {
+            $(sw).hide();
+            $("#user_info").hide();
+            $("#login_btn_area").show();
+        }
+    }
+
+    RefreshLoginArea();
+
+
+    function AppendCookie(key, value) {
+        var values = String(value).split(/[ ]/);
+        var old = $.cookie(key) || "";
+
+        for (var i in values) {
+            var find = new RegExp(values[i] + "[ ]+");
+            var find_end = new RegExp(values[i] + "$");
+            if (!find.test(old) && !find_end.test(old)) {
+                if (old && old != "") {
+                    old += " ";
+                }
+                old += values[i];
+            }
+        }
+
+        $.cookie(key, old, {
+            expires: 30
+        });
+        return $.cookie(key);
+    }
+
+
+    function RemoveCookie(key, value) {
+        var values = String(value).split(/[ ]/);
+        var old = $.cookie(key) || "";
+
+        for (var i in values) {
+            var find = new RegExp(values[i] + "[ ]+");
+            var find_end = new RegExp(values[i] + "$");
+            old = old.replace(find, "");
+            old = old.replace(find_end, "");
+        }
+
+        $.cookie(key, old, {
+            expires: 30
+        });
+        return $.cookie(key);
+    }
+
+
+</script>
+
+</html>
